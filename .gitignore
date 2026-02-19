@@ -2,6 +2,11 @@
 **/target/
 **/.mvn/wrapper/maven-wrapper.jar
 
+# TLS artifacts
+tls/*.pem
+tls/*.p12
+tls/*.srl
+
 # IDE
 .idea/
 *.iml

@@ -40,7 +40,10 @@ services:
       context: ./heroes-service
       dockerfile: src/main/docker/Dockerfile.jvm
     ports:
-      - "8080:8080"
+      - "8443:8443"
+    volumes:
+      - ./tls/server-cert.pem:/deployments/tls/server-cert.pem:ro
+      - ./tls/server-key.pem:/deployments/tls/server-key.pem:ro
     environment:
       DB_HOST: heroes-db
       DB_PORT: 5432
