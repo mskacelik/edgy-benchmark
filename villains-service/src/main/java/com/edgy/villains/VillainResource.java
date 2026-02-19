@@ -1,5 +1,6 @@
 package com.edgy.villains;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -7,37 +8,46 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import org.jboss.resteasy.reactive.ResponseStatus;
+import org.jboss.resteasy.reactive.RestResponse.StatusCode;
 
 @Path("/villains")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VillainResource {
 
-    /** Retrieve all villains. */
     @GET
-    public List<Villain> getAll() {
+    public Uni<List<Villain>> getAll() {
         return Villain.listAll();
     }
 
-    /** Retrieve a single villain by id. */
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") Long id) {
-        Villain villain = Villain.findById(id);
-        if (villain == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(villain).build();
+    public Uni<Villain> getById(@PathParam("id") Long id) {
+        return Villain.findById(id);
     }
 
-    /** Create a new villain. */
+    @GET
+    @Path("/unstable")
+    public Uni<List<Villain>> unstable() {
+        if (ThreadLocalRandom.current().nextInt(100) < 5) {
+            return Uni.createFrom().<List<Villain>>nothing()
+                    .ifNoItem().after(Duration.ofSeconds(30))
+                    .failWith(new WebApplicationException(Response.Status.REQUEST_TIMEOUT));
+        }
+        return Villain.listAll();
+    }
+
     @POST
     @Transactional
-    public Response create(Villain villain) {
-        villain.persist();
-        return Response.status(Response.Status.CREATED).entity(villain).build();
+    @ResponseStatus(StatusCode.CREATED)
+    public Uni<Villain> create(Villain villain) {
+        return villain.persist();
     }
 }

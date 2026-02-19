@@ -1,5 +1,6 @@
 package com.edgy.heroes;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -10,6 +11,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import org.jboss.resteasy.reactive.ResponseStatus;
+import org.jboss.resteasy.reactive.RestResponse.StatusCode;
 
 @Path("/heroes")
 @Produces(MediaType.APPLICATION_JSON)
@@ -17,24 +20,20 @@ import java.util.List;
 public class HeroResource {
 
     @GET
-    public List<Hero> getAll() {
+    public Uni<List<Hero>> getAll() {
         return Hero.listAll();
     }
 
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") Long id) {
-        Hero hero = Hero.findById(id);
-        if (hero == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(hero).build();
+    public Uni<Hero> getById(@PathParam("id") Long id) {
+        return Hero.findById(id);
     }
 
     @POST
     @Transactional
-    public Response create(Hero hero) {
-        hero.persist();
-        return Response.status(Response.Status.CREATED).entity(hero).build();
+    @ResponseStatus(StatusCode.CREATED)
+    public Uni<Hero> create(Hero hero) {
+        return hero.persist();
     }
 }
