@@ -1,0 +1,98 @@
+services:
+  # ─────────────── Databases ───────────────
+
+  heroes-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: heroes
+      POSTGRES_PASSWORD: heroes
+      POSTGRES_DB: heroes_db
+    volumes:
+      - heroes-db-data:/var/lib/postgresql/data
+    networks:
+      - edgy-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U heroes -d heroes_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  villains-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: villains
+      POSTGRES_PASSWORD: villains
+      POSTGRES_DB: villains_db
+    volumes:
+      - villains-db-data:/var/lib/postgresql/data
+    networks:
+      - edgy-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U villains -d villains_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────── Services ───────────────
+
+  heroes-service:
+    build:
+      context: ./heroes-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: heroes-db
+      DB_PORT: 5432
+      DB_USER: heroes
+      DB_PASSWORD: heroes
+      DB_NAME: heroes_db
+    depends_on:
+      heroes-db:
+        condition: service_healthy
+    networks:
+      - edgy-net
+
+  villains-service-1:
+    build:
+      context: ./villains-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8081:8080"
+    environment:
+      DB_HOST: villains-db
+      DB_PORT: 5432
+      DB_USER: villains
+      DB_PASSWORD: villains
+      DB_NAME: villains_db
+    depends_on:
+      villains-db:
+        condition: service_healthy
+    networks:
+      - edgy-net
+
+  villains-service-2:
+    build:
+      context: ./villains-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8082:8080"
+    environment:
+      DB_HOST: villains-db
+      DB_PORT: 5432
+      DB_USER: villains
+      DB_PASSWORD: villains
+      DB_NAME: villains_db
+    depends_on:
+      villains-db:
+        condition: service_healthy
+    networks:
+      - edgy-net
+
+volumes:
+  heroes-db-data:
+  villains-db-data:
+
+networks:
+  edgy-net:
+    driver: bridge
