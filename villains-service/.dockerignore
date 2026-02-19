@@ -1,8 +1,6 @@
-target/
-.git/
-.gitignore
-.mvn/
-.idea/
-.vscode/
-*.md
-*.log
+*
+!target/quarkus-app/
+!target/quarkus-app/**
+!target/*-runner
+!target/*-runner.jar
+!target/lib/*
