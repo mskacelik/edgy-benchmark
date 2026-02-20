@@ -1,7 +1,7 @@
 package com.edgy.villains;
 
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -45,7 +45,7 @@ public class VillainResource {
     }
 
     @POST
-    @Transactional
+    @WithTransaction
     @ResponseStatus(StatusCode.CREATED)
     public Uni<Villain> create(Villain villain) {
         return villain.persist();

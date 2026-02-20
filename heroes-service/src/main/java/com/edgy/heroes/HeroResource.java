@@ -1,7 +1,7 @@
 package com.edgy.heroes;
 
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -31,7 +31,7 @@ public class HeroResource {
     }
 
     @POST
-    @Transactional
+    @WithTransaction
     @ResponseStatus(StatusCode.CREATED)
     public Uni<Hero> create(Hero hero) {
         return hero.persist();
