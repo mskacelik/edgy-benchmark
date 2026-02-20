@@ -92,6 +92,19 @@ services:
     networks:
       - edgy-net
 
+  consul:
+    image: hashicorp/consul:1.22
+    command: consul agent -dev -config-dir=/consul/config -client=0.0.0.0
+    ports:
+      - "8500:8500"
+    volumes:
+      - ./consul.d:/consul/config
+    depends_on:
+      - villains-service-1
+      - villains-service-2
+    networks:
+      - edgy-net
+
   edgy-gateway:
     build:
       context: ./edgy-gateway
@@ -102,6 +115,7 @@ services:
       - heroes-service
       - villains-service-1
       - villains-service-2
+      - consul
     networks:
       - edgy-net
 

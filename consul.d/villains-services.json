@@ -1,0 +1,16 @@
+{
+  "services": [
+    {
+      "id": "villains-1",
+      "name": "villains-service",
+      "address": "villains-service-1",
+      "port": 8080
+    },
+    {
+      "id": "villains-2",
+      "name": "villains-service",
+      "address": "villains-service-2",
+      "port": 8080
+    }
+  ]
+}
