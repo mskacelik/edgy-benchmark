@@ -111,6 +111,8 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     ports:
       - "8083:8080"
+    volumes:
+      - ./tls/ca-cert.pem:/deployments/tls/ca-cert.pem:ro
     depends_on:
       - heroes-service
       - villains-service-1
