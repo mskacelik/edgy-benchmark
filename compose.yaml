@@ -92,6 +92,19 @@ services:
     networks:
       - edgy-net
 
+  edgy-gateway:
+    build:
+      context: ./edgy-gateway
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8083:8080"
+    depends_on:
+      - heroes-service
+      - villains-service-1
+      - villains-service-2
+    networks:
+      - edgy-net
+
 volumes:
   heroes-db-data:
   villains-db-data:
