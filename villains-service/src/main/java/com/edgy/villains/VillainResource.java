@@ -36,7 +36,7 @@ public class VillainResource {
     @GET
     @Path("/unstable")
     public Uni<List<Villain>> unstable() {
-        if (ThreadLocalRandom.current().nextInt(100) < 5) {
+        if (ThreadLocalRandom.current().nextInt(100) < 30) {
             return Uni.createFrom().<List<Villain>>nothing()
                     .ifNoItem().after(Duration.ofSeconds(30))
                     .failWith(new WebApplicationException(Response.Status.REQUEST_TIMEOUT));
@@ -49,5 +49,17 @@ public class VillainResource {
     @ResponseStatus(StatusCode.CREATED)
     public Uni<Villain> create(Villain villain) {
         return villain.persist();
+    }
+
+    @GET
+    @Path("/i-am-villain")
+    public Uni<String> iAmVillain() {
+        return Uni.createFrom().item("I am a villain!");
+    }
+
+    @GET
+    @Path("/i-am-not-villain")
+    public Uni<String> iAmNotVillain() {
+        return Uni.createFrom().item("I am not a villain!");
     }
 }
