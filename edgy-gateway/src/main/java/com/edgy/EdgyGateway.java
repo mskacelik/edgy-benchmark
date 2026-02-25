@@ -18,11 +18,11 @@ class EdgyGateway {
     @Produces
     RoutingConfiguration routing() {
         return new RoutingConfiguration()
-                .addRoute(new Route("/api/villains/*",
-                                Origin.of("villain-backend",
-                                "http://villains-service-1:8080/villains/{__REQUEST_URI_AFTER_PREFIX__}"),
+                        .addRoute(new Route("/edgy/villains/*",
+                                                Origin.of("villain-backend",
+                                "http://villains-service-1:8080/villains/{__REQUEST_URI_AFTER_PREFIX__}/"),
                         PathMode.PREFIX))
-                .addRoute(new Route("/api/villains-post-transform",
+                .addRoute(new Route("/edgy/villains-post-transform",
                         Origin.of("villain-backend-with-request-and-response-payload-transformation",
                                 "http://villains-service-1:8080/villains"),
                         PathMode.FIXED)
@@ -35,20 +35,20 @@ class EdgyGateway {
                         .addResponseTransformer(new ResponseJsonObjectBodyModifier(json -> json
                                 .put("response-processed-by-gateway-timestamp",
                                         Instant.now().toString()))))
-                .addRoute(new Route("/api/stork/villains/*",
+                .addRoute(new Route("/edgy/stork/villains/*",
                         Origin.of("villain-backends", "stork://villains-service/villains/{__REQUEST_URI_AFTER_PREFIX__}"),
                         PathMode.PREFIX))
-                .addRoute(new Route("/api/heroes/*",
+                .addRoute(new Route("/edgy/heroes/*",
                         Origin.of("hero-backend", "https://heroes-service:8443/heroes/{__REQUEST_URI_AFTER_PREFIX__}"),
                         PathMode.PREFIX))
-                .addRoute(new Route("/api/villain-unstable-timeout-guard",
+                .addRoute(new Route("/edgy/villain-unstable-timeout-guard",
                         Origin.of("villain-unstable-backend",
                                 "http://villains-service-1:8080/villains/unstable"),
                         PathMode.FIXED)
                         .addRequestTransformer(new RequestFaultToleranceApplier(
                                 guardBuilder -> guardBuilder.withTimeout()
                                         .duration(5, ChronoUnit.SECONDS).done())))
-                .addRoute(new Route("/api/villains-unstable-cb",
+                .addRoute(new Route("/edgy/villains-unstable-cb",
                         Origin.of("villain-unstable-backend",
                                 "http://villains-service-1:8080/villains/unstable"),
                         PathMode.FIXED)
@@ -60,11 +60,11 @@ class EdgyGateway {
                                         .withTimeout()
                                         .duration(1, ChronoUnit.SECONDS).done())))
                 // order is important
-                .addRoute(new Route("/api/am-i-villain",
+                .addRoute(new Route("/edgy/am-i-villain",
                         Origin.of("iAmVillain", "http://villains-service-1:8080/villains/i-am-villain"),
                         PathMode.FIXED)
                         .addPredicate(rp -> "yes".equals(rp.request().getHeader("X-Is-Villain"))))
-                .addRoute(new Route("/api/am-i-villain",
+                .addRoute(new Route("/edgy/am-i-villain",
                         Origin.of("i-am-not-villain",
                                 "http://villains-service-1:8080/villains/i-am-not-villain"),
                         PathMode.FIXED));
