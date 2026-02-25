@@ -121,6 +121,20 @@ services:
     networks:
       - edgy-net
 
+  scg-gateway:
+    build:
+      context: ./scg-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8080"
+    depends_on:
+      - heroes-service
+      - villains-service-1
+      - villains-service-2
+      - consul
+    networks:
+      - edgy-net
+
 volumes:
   heroes-db-data:
   villains-db-data:
