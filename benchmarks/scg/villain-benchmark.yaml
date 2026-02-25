@@ -1,0 +1,27 @@
+name: villain-blast-ramp-benchmark-scg
+
+http:
+  host: http://localhost:8084
+  sharedConnections: 20000
+
+phases:
+  - blastPhase:
+      increasingRate:
+        initialUsersPerSec: 4000
+        targetUsersPerSec: 16000
+        duration: 2m
+        scenario:
+          initialSequences:
+            - createVillain:
+                - httpRequest:
+                    POST: /scg/villains
+                    headers:
+                      Content-Type: application/json
+                    body: |
+                      {
+                        "name": "Joker",
+                        "otherName": "The Clown Prince of Crime",
+                        "level": 10,
+                        "picture": "https://example.com/joker.png",
+                        "powers": "Chaos, unpredictability, toxic gas"
+                      }

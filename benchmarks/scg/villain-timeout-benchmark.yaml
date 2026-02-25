@@ -1,0 +1,17 @@
+name: villain-timeout-blast-ramp-benchmark-scg
+
+http:
+  host: http://localhost:8084
+  sharedConnections: 20000
+
+phases:
+  - blastPhase:
+      increasingRate:
+        initialUsersPerSec: 1
+        targetUsersPerSec: 500
+        duration: 2m
+        scenario:
+          initialSequences:
+            - unstableTimeout:
+                - httpRequest:
+                    GET: /scg/villain-unstable-timeout-guard

@@ -1,0 +1,27 @@
+name: villain-transform-blast-ramp-benchmark-edgy
+
+http:
+  host: http://localhost:8083
+  sharedConnections: 20000
+
+phases:
+  - blastPhase:
+      increasingRate:
+        initialUsersPerSec: 10000
+        targetUsersPerSec: 16000
+        duration: 1m
+        scenario:
+          initialSequences:
+            - createVillainWithTransform:
+                - httpRequest:
+                    POST: /edgy/villains-post-transform
+                    headers:
+                      Content-Type: application/json
+                    body: |
+                      {
+                        "name": "Joker",
+                        "otherName": "The Clown Prince of Crime",
+                        "level": 10,
+                        "picture": "https://example.com/joker.png",
+                        "powers": "Chaos, unpredictability, toxic gas"
+                      }

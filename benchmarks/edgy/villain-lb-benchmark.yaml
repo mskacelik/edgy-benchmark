@@ -1,0 +1,27 @@
+name: villain-lb-blast-ramp-benchmark-edgy
+
+http:
+  host: http://localhost:8083
+  sharedConnections: 20000
+
+phases:
+  - blastPhase:
+      increasingRate:
+        initialUsersPerSec: 1000
+        targetUsersPerSec: 20000
+        duration: 2m
+        scenario:
+          initialSequences:
+            - createVillainLb:
+                - httpRequest:
+                    POST: /edgy/stork/villains/
+                    headers:
+                      Content-Type: application/json
+                    body: |
+                      {
+                        "name": "Joker",
+                        "otherName": "The Clown Prince of Crime",
+                        "level": 10,
+                        "picture": "https://example.com/joker.png",
+                        "powers": "Chaos, unpredictability, toxic gas"
+                      }
