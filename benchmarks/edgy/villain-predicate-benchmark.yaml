@@ -1,0 +1,22 @@
+name: villain-predicate-blast-ramp-benchmark-edgy
+
+http:
+  host: http://localhost:8083
+  sharedConnections: 20000
+
+phases:
+  - blastPhase:
+      increasingRate:
+        initialUsersPerSec: 1
+        targetUsersPerSec: 10000
+        duration: 2m
+        scenario:
+          initialSequences:
+            - isVillain:
+                - httpRequest:
+                    GET: /edgy/am-i-villain
+                    headers:
+                      X-Is-Villain: "yes"
+#            - isNotVillain:
+#                - httpRequest:
+#                    GET: /edgy/am-i-villain

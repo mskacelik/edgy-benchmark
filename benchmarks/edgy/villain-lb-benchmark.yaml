@@ -14,7 +14,7 @@ phases:
           initialSequences:
             - createVillainLb:
                 - httpRequest:
-                    POST: /edgy/stork/villains/
+                    POST: /edgy/stork/villains
                     headers:
                       Content-Type: application/json
                     body: |

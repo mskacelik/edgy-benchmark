@@ -1,4 +1,4 @@
-name: villain-timeout-blast-ramp-benchmark-edgy
+name: villain-persistenceless-blast-ramp-benchmark-edgy
 
 http:
   host: http://localhost:8083
@@ -8,10 +8,10 @@ phases:
   - blastPhase:
       increasingRate:
         initialUsersPerSec: 1
-        targetUsersPerSec: 600
-        duration: 1m
+        targetUsersPerSec: 20000
+        duration: 2m
         scenario:
           initialSequences:
-            - unstableTimeout:
+            - amIVillain:
                 - httpRequest:
-                    GET: /edgy/villain-unstable-timeout-guard
+                    GET: /edgy/am-i-villain
