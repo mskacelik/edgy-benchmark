@@ -69,6 +69,16 @@ public class GatewayConfig {
                                             }
                                         }))
                         .uri("http://villains-service-1:8080"))
+                // order is important: predicate route first, fallback second
+                .route("am-i-villain-is-villain", r -> r
+                        .path("/scg/am-i-villain")
+                        .and().header("X-Is-Villain", "yes")
+                        .filters(f -> f.rewritePath("/scg/am-i-villain", "/villains/i-am-villain"))
+                        .uri("http://villains-service-1:8080"))
+                .route("am-i-villain-is-not-villain", r -> r
+                        .path("/scg/am-i-villain")
+                        .filters(f -> f.rewritePath("/scg/am-i-villain", "/villains/i-am-not-villain"))
+                        .uri("http://villains-service-1:8080"))
                 .build();
     }
 }
