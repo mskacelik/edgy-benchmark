@@ -20,8 +20,8 @@ class EdgyGateway {
         return new RoutingConfiguration()
                         .addRoute(new Route("/edgy/villains/*",
                                                 Origin.of("villain-backend",
-                                "http://villains-service-1:8080/villains/{__REQUEST_URI_AFTER_PREFIX__}/"),
-                        PathMode.PREFIX))
+                                                        "http://villains-service-1:8080/villains/{__REQUEST_URI_AFTER_PREFIX__}"),
+                                        PathMode.PREFIX))
                 .addRoute(new Route("/edgy/villains-post-transform",
                         Origin.of("villain-backend-with-request-and-response-payload-transformation",
                                 "http://villains-service-1:8080/villains"),
